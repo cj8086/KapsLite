@@ -11,95 +11,89 @@
  ;; E  = right_option   (right ⌥)
  ;; R  = right_shift    (right ⇧)
  ;; P  = caps_lock      (⇪)
- ;; !! = Hyper key = Cmd+Ctrl+Opt+Shift (🪄)
+ ;; !! = Hyper key = right_command+right_control+right_option+right_shift (🪄)
  ;; ## = Any combination of modifiers (including none)
 
- :profiles {:KapsLite {:default true  ; Apply this profile by default
-                       :sim     50    ; Simultaneous press threshold (ms): 
-                                      ; Keys pressed within this window count as simultaneous
-                       :delay   500   ; Delayed action threshold (ms):
-                                      ; Waits this long before triggering held key actions
-                       :alone   1000  ; Alone timeout (ms):
-                                      ; If released within this time, triggers single tap action
-                       :held    200}} ; Held down threshold (ms):
-                                      ; Time needed to register as a key hold vs tap
+ :profiles {:KapsLite {;; "default true means" rules default goes into this rule if no profiles specified
+                       :default true
+                       ;; simultaneous key press threshold
+                       ;; simlayer is implemented with to_if_alone and simultaneous key press feature
+                       :sim     250
+                       ;; to_delayed_action_delay_milliseconds
+                       ;; checkout karabiner's documentation
+                       ;; https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-delayed-action/
+                       ;; basically it means time after which the key press is count delayed
+                       :delay   500
+                       ;; https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/to-if-alone/
+                       ;; to_if_alone_timeout_milliseconds
+                       ;; affects to_if_alone behavior
+                       ;; simlayer is implemented with to_if_alone and simultaneous key press feature
+                       :alone   1000
+                       ;; to_if_held_down_threshold_milliseconds
+                       ;; check the doc, I don't know what does this mean.
+                       ;; maybe press this many milliseconds counts a "held" ?
+                       :held    200}} ; to_if_held_down_threshold_milliseconds (default: 200)
 
  ; Threshold for detecting simultaneous layer activation (default: 250ms)
- :simlayer-threshold 50
-
- ; Application grouping using regex patterns for context-aware rules
- :applications {:terminals ["^com\\.apple\\.Terminal$"
-                            "^com\\.googlecode\\.iterm2$"
-                            "^com\\.jetbrains\\.(.*)$"]
-                :vscode   ["^com\\.microsoft\\.VSCode$"]
-                :ide      ["^com\\.jetbrains\\.(.*)$"
-                           "^com\\.microsoft\\.VSCode$"]}
+ :simlayer-threshold 250
 
  ; MAIN KEY MAPPING CONFIGURATION :
  :main [;; ===== CapsLock Transformation ================================
-        {:des "Transform CapsLock into Hyper key (Tap: Esc, Hold: CapsLock)"
-         :rules [; Maps CapsLock to Hyper (right cmd/ctrl/opt + right shift)
-                 ; When released quickly (< :alone timeout): triggers Esc key
-                 ; When held (> :held timeout): activates CapsLock
+        {:des "Transform CapsLock into Hyper key"
+         :rules [;
                  [:##caps_lock :!QWEright_shift nil {:alone :caps_lock}]]}
-
 
         ;; ===== Cursor Movement Layer ================================
         {:des   "Hyper-based cursor movement"
-         :rules [; Vim-style HJKL navigation
+         :rules [; 
                  [:!QWERe :up_arrow]      ; Hyper + E → ↑
                  [:!QWERd :down_arrow]    ; Hyper + D → ↓
                  [:!QWERs :left_arrow]    ; Hyper + S ← 
                  [:!QWERf :right_arrow]   ; Hyper + F →
 
-                 ; Word navigation (add Control modifier)
-                 [:!QWERCs :!Oleft_arrow]     ; Hyper+Ctrl+S → ⌥← (word left)
-                 [:!QWERCf :!Oright_arrow]    ; Hyper+Ctrl+F → ⌥→ (word right)
+                 ; Word navigation 
+                 [:!QWERCs :!Oleft_arrow]     ; Hyper + Command + S → ⌥← (word left)
+                 [:!QWERCf :!Oright_arrow]    ; Hyper + Command + F → ⌥→ (word right)
 
                  ; Line boundary navigation
-                 [:!QWERa :!Cleft_arrow]      ; Hyper+A → ⌘← (start of line)
-                 [:!QWERg :!Cright_arrow]     ; Hyper+G → ⌘→ (end of line)
+                 [:!QWERa :!Cleft_arrow]      ; Hyper + A → ⌘← (start of line)
+                 [:!QWERg :!Cright_arrow]     ; Hyper + G → ⌘→ (end of line)
 
-                 ; Hyper+Space → Enter (confirm/execute)
-                 [:!QWERspacebar :return_or_enter]
-
-                 ; Terminal-specific home key (commented out)
-                 ;[:!QWERp :!Cleft_arrow [:!terminals]]
-                 ]}
+                 ; Hyper + Space → Enter
+                 [:!QWERspacebar :return_or_enter]]}
 
 
         ;; ===== Text Selection Layer ================================
         {:des   "Shift-based text selection combinations"
          :rules [; Basic shift-selection (IJKL arrows)
-                 [:!QWERi :!Sup_arrow]       ; Hyper+I → ⇧↑ (select up)
-                 [:!QWERk :!Sdown_arrow]     ; Hyper+K → ⇧↓ (select down)
-                 [:!QWERj :!Sleft_arrow]     ; Hyper+J → ⇧← (select left)
-                 [:!QWERl :!Sright_arrow]    ; Hyper+L → ⇧→ (select right)
+                 [:!QWERi :!Sup_arrow]       ; Hyper + I → ⇧↑ (select up)
+                 [:!QWERk :!Sdown_arrow]     ; Hyper + K → ⇧↓ (select down)
+                 [:!QWERj :!Sleft_arrow]     ; Hyper + J → ⇧← (select left)
+                 [:!QWERl :!Sright_arrow]    ; Hyper + L → ⇧→ (select right)
 
                  ; Word selection
-                 [:!QWERCj :!OSleft_arrow]   ; Hyper+Ctrl+J → ⌥⇧← (select word left)
-                 [:!QWERCl :!OSright_arrow]  ; Hyper+Ctrl+L → ⌥⇧→ (select word right)
+                 [:!QWERCj :!OSleft_arrow]   ; Hyper + Command + J → ⌥⇧← (select word left)
+                 [:!QWERCl :!OSright_arrow]  ; Hyper + Command + L → ⌥⇧→ (select word right)
 
                  ; Full-line selection
-                 [:!QWERh :!SCleft_arrow]         ; Hyper+H → ⌘⇧← (select to line start)
-                 [:!QWERsemicolon :!SCright_arrow] ; Hyper+; → ⌘⇧→ (select to line end)
+                 [:!QWERh :!SCleft_arrow]         ; Hyper + H → ⌘⇧← (select to line start)
+                 [:!QWERsemicolon :!SCright_arrow] ; Hyper + ; → ⌘⇧→ (select to line end)
                  ]}
 
 
         ;; ===== Text Deletion Layer =================================
         {:des   "Intelligent text deletion macros"
          :rules [; Basic deletion
-                 [:!QWERw :delete_or_backspace]  ; Hyper+W → ⌫ (delete left)
-                 [:!QWERr :delete_forward]       ; Hyper+R → ⌦ (delete right)
+                 [:!QWERw :delete_or_backspace]  ; Hyper + W → ⌫ (delete left)
+                 [:!QWERr :delete_forward]       ; Hyper + R → ⌦ (delete right)
 
                  ; Word deletion
-                 [:!QWERCw :!Odelete_or_backspace] ; Hyper+Ctrl+W → ⌥⌫ (delete word left)
-                 [:!QWERCr :!Odelete_forward]      ; Hyper+Ctrl+R → ⌥⌦ (delete word right)
-
+                 [:!QWERCw :!Odelete_or_backspace] ; Hyper + Command + W → ⌥⌫ (delete word left)
+                 [:!QWERCr :!Odelete_forward]      ; Hyper + Command + R → ⌥⌦ (delete word right)
                  ; Line-level deletion
-                 [:!QWERdelete_or_backspace :!Cdelete_or_backspace]  ; Hyper+⌫ → ⌘⌫ (delete line)
+                 [:!QWERdelete_or_backspace :!Cdelete_or_backspace]  ; Hyper + ⌫ → ⌘⌫ (delete line)
 
                  ; Position-based deletion
-                 [:!QWERopen_bracket [:!SCleft_arrow :delete_or_backspace]]  ; Hyper+[ → ⌘⇧← + ⌫
-                 [:!QWERslash [:!SCright_arrow :delete_or_backspace]]        ; Hyper+/ → ⌘⇧→ + ⌫
+                 [:!QWERopen_bracket [:!SCleft_arrow :delete_or_backspace]]  ; Hyper + [ → ⌘⇧← + ⌫
+                 [:!QWERslash [:!SCright_arrow :delete_or_backspace]]        ; Hyper + / → ⌘⇧→ + ⌫
                  ]}]}
