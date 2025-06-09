@@ -41,7 +41,7 @@
  :main [;; ===== CapsLock Transformation ================================
         {:des "Transform CapsLock into Hyper key"
          :rules [;
-                 [:##caps_lock :!QWEright_shift nil {:alone :caps_lock}]]}
+                 [:##caps_lock :!QWFright_shift nil {:alone :!Tspacebar}]]}
 
         ;; ===== Cursor Movement Layer ================================
         {:des   "Hyper-based cursor movement"
