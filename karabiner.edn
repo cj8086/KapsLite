@@ -39,9 +39,10 @@
 
  ; MAIN KEY MAPPING CONFIGURATION :
  :main [;; ===== CapsLock Transformation ================================
-        {:des "Transform CapsLock into Hyper key"
+        {:des "Capslock -> Hyper"
+         :lazy true
          :rules [;
-                 [:##caps_lock :!QWFright_shift nil {:alone :!Tspacebar}]]}
+                 [:##caps_lock :!QWEright_shift nil {:alone :caps_lock}]]} ;;!Tspacebar
 
         ;; ===== Cursor Movement Layer ================================
         {:des   "Hyper-based cursor movement"
@@ -64,7 +65,7 @@
 
 
         ;; ===== Text Selection Layer ================================
-        {:des   "Shift-based text selection combinations"
+        {:des   "Hyper-based text selection"
          :rules [; Basic shift-selection (IJKL arrows)
                  [:!QWERi :!Sup_arrow]       ; Hyper + I → ⇧↑ (select up)
                  [:!QWERk :!Sdown_arrow]     ; Hyper + K → ⇧↓ (select down)
@@ -82,7 +83,7 @@
 
 
         ;; ===== Text Deletion Layer =================================
-        {:des   "Intelligent text deletion macros"
+        {:des   "Hyper-based text deletion"
          :rules [; Basic deletion
                  [:!QWERw :delete_or_backspace]  ; Hyper + W → ⌫ (delete left)
                  [:!QWERr :delete_forward]       ; Hyper + R → ⌦ (delete right)
